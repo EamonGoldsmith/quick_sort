@@ -1,45 +1,64 @@
 #include <stdio.h>
 
-//default list and length
-int example_len = 22;
-int example_list[] = {0, 3, 6, 23, 54, 564, 23, 4, 454, 35, 56, 4, 23, 22, 4, 32, 43254, 2, 54254, 25, 2, 42};
+//default list and index of last element
+int example_len = 9;
+int example_list[] = {0, 3, 6, 23, 54, 564, 23, 4, 454, 35};
 
-int partition(int list[], int len);
-int* quick_sort(int list[], int len);
-
-void printArray(int array[], int len);
+void quicksort(int list[], int start, int len);
+int partition(int list[], int start, int len);
+void printArray(int array[], int start, int len);
 
 int main (int argc, char **argv)
 {
-	quick_sort(example_list, example_len);
+	quicksort(example_list, 0, example_len);
+	printArray(example_list, 0, example_len);
 	return 0;
 }
 
-int partition(int list[], int len)
+void quicksort(int list[], int start, int len)
+/* separate the list into two sections
+ * recursively call until list sorted
+ */
 {
-	return 0;
+	if (start < len) {
+		int split;
+		split = partition(list, start, len);
+		printArray(list, start, len);
+		quicksort(list, start, split-1);
+		quicksort(list, split+1, len);
+	}
 }
 
-int* quick_sort(int list[], int len)
+int partition(int list[], int start, int len)
+/* sort a list from lowest to highes return a list of
+ * elements sorted relative to the last element
+ */
 {
-	printArray(list, len);
-	int pivot = len-1;
-	int low = 0;
-	for (int i = 0; i < len; i++) {
+ 	if (len < 1) return 0;
+	
+	int pivot = len;
+	int low = start;
+	for (int i = start; i <= len; i++) {
+		// swap i to low if lower than pivot
 		if (list[i] < list[pivot]) {
 			int temp = list[low];
 			list[low] = list[i];
 			list[i] = temp;
+			low++;
 		}
-		low++;
 	}
-	printArray(list, len);
-	return list;
+	// move pivot to the center
+	int temp = list[low];
+	list[low] = list[pivot];
+	list[pivot] = temp;
+
+	return low;
 }
 
-void printArray(int array[], int len)
+void printArray(int array[], int start, int len)
+/* print all elements in an array of integers */
 {
-	for (int i = 0; i < len; i++)
+	for (int i = start; i <= len; i++)
 	{
 		printf("%d, ", array[i]);
 	}
